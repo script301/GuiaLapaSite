@@ -12,6 +12,9 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="marca/icone_app.png">
 <link rel="apple-touch-icon" href="marca/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
   :root{
@@ -120,6 +123,57 @@
   @media (max-width:899px){ .leaflet-bottom{ bottom:152px } }
   @media (prefers-reduced-motion: reduce){ *{transition:none!important} }
 </style>
+<style id="visual-misto">
+  :root{
+    --fundo:#FBF8F2; --painel:#FFFFFF; --texto:#1B2430; --suave:#4F5A68; --borda:#E8E2D6; --campo:#F4EFE5;
+    --serif:"Fraunces",Georgia,"Times New Roman",serif;
+    --raio:18px;
+  }
+  html[data-tema="escuro"]{
+    --fundo:#0C1018; --painel:rgba(22,28,38,.86); --texto:#EEF1F5; --suave:#B3BDCB; --borda:#2B3442; --campo:#1C2430;
+  }
+  body{background:var(--fundo)}
+  header{background:linear-gradient(120deg,#0B2D6B,#14428F);box-shadow:0 2px 12px rgba(11,45,107,.25)}
+  header .lema{font-family:var(--serif);font-style:italic;font-size:14px;opacity:.95}
+  #painel{background:var(--painel)}
+  html[data-tema="escuro"] #painel{-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+  @media (min-width:900px){ #painel{border-right:1px solid var(--borda)} }
+
+  /* títulos em serifa, dando cara de guia */
+  .cartao h3,.det h2,.aviso b{font-family:var(--serif);letter-spacing:.1px}
+  .det h2{font-size:26px;line-height:1.15}
+  .cartao h3{font-size:18px}
+  .tag{font-family:system-ui,sans-serif;text-transform:uppercase;font-size:11px;letter-spacing:.6px;color:#B45309}
+  html[data-tema="escuro"] .tag{color:#FFB35C}
+
+  /* cartões: foto em destaque, cor por categoria */
+  .cartao{border-radius:var(--raio);border:1px solid var(--borda);box-shadow:0 1px 2px rgba(0,0,0,.04);transition:transform .15s,box-shadow .15s,border-color .15s}
+  .cartao:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(11,45,107,.10)}
+  .cartao .foto{width:84px;height:84px;background:var(--cat,#2980EB);box-shadow:inset 0 0 0 2px rgba(255,255,255,.25)}
+  .cartao .foto img{border-radius:0}
+  .cartao{border-left:5px solid var(--cat,#2980EB)}
+
+  /* chips com cor por categoria */
+  .chip{border-radius:999px;font-weight:700}
+  .chip.on{background:var(--azul);border-color:var(--azul)}
+  html[data-tema="escuro"] .chip.on{background:var(--azul-ceu);border-color:var(--azul-ceu)}
+
+  /* avisos e anúncios mais limpos */
+  .aviso{border-radius:var(--raio)}
+  .anuncio{border-radius:var(--raio);box-shadow:0 2px 10px rgba(0,0,0,.06)}
+  .convite{border-radius:var(--raio)}
+
+  /* pinos coloridos por categoria, com contorno que aparece no escuro */
+  .pin{background:var(--cat,#0B2D6B);border:3px solid #fff;box-shadow:0 3px 10px rgba(0,0,0,.35);width:38px;height:38px;font-size:18px}
+  .pin.pat{outline:3px solid #FFC107;outline-offset:2px}
+  .leaflet-marker-icon.pin-wrap{background:none}
+
+  /* botões com cantos mais suaves e foco visível */
+  .btn{border-radius:14px;box-shadow:0 2px 6px rgba(11,45,107,.18)}
+  .btn:focus-visible,.chip:focus-visible,.cartao:focus-visible{outline:3px solid #2980EB;outline-offset:2px}
+  .instalar{border-radius:var(--raio)}
+  @media (prefers-reduced-motion: reduce){ .cartao{transition:none} }
+</style>
 </head>
 <body>
 <header>
@@ -160,6 +214,7 @@
   'use strict';
   const CFG = window.GUIA_CONFIG || {};
   const CATEGORIAS = {hotel:'Hotel',pousada:'Pousada',restaurante:'Restaurante',hamburgueria:'Hamburgueria',lanchonete:'Lanchonete',padaria:'Padaria',mercado:'Mercado',farmacia:'Farmácia',posto:'Posto',banco:'Banco',religioso:'Religioso',turismo:'Turismo',transporte:'Transporte',servicos:'Serviços',outros:'Outros'};
+  const COR = {hotel:'#7B3FC4',pousada:'#7B3FC4',restaurante:'#D9480F',hamburgueria:'#D9480F',lanchonete:'#E8710A',padaria:'#B8860B',mercado:'#2B8A3E',farmacia:'#0CA678',posto:'#495057',banco:'#1C7ED6',religioso:'#6741D9',turismo:'#0B7285',transporte:'#1864AB',servicos:'#5C7CFA',outros:'#2980EB'};
   const ICONES = {hotel:'🏨',pousada:'🏡',restaurante:'🍽️',hamburgueria:'🍔',lanchonete:'🥪',padaria:'🥖',mercado:'🛒',farmacia:'💊',posto:'⛽',banco:'🏦',religioso:'⛪',turismo:'🗺️',transporte:'🚌',servicos:'🛠️',outros:'📍'};
   const TIPOS = {aviso:['📢','Aviso','#1E6FD9'],rua_fechada:['⛔','Rua fechada','#D93025'],procissao:['⛪','Procissão','#7B3FC4'],evento:['🎉','Evento','#1E9E5B'],obra:['🚧','Obra','#E8710A'],transito:['🚦','Trânsito','#B8860B']};
 
@@ -257,7 +312,7 @@
     if (!itens.length){ el.innerHTML = '<div class="vazio">Nenhum local encontrado.</div>'; }
     else el.innerHTML = itens.map(h => {
       const d = dist(h);
-      return '<button class="cartao" data-id="' + esc(h.id) + '" aria-label="Ver ' + esc(h.nome) + '">' +
+      return '<button class="cartao" style="--cat:' + (COR[h.categoria] || COR.outros) + '" data-id="' + esc(h.id) + '" aria-label="Ver ' + esc(h.nome) + '">' +
         '<div class="foto">' + (urlSegura(h.foto_url) ? '<img src="' + esc(h.foto_url) + '" alt="" loading="lazy">' : (ICONES[h.categoria] || '📍')) + '</div>' +
         '<div style="min-width:0">' +
           (patrocinado(h) ? '<span class="tag">★ PATROCINADO</span>' : '') +
@@ -285,7 +340,7 @@
     camadaPins.clearLayers(); pinsPorId = {};
     itens.forEach(h => {
       if (h.latitude == null || h.longitude == null) return;
-      const ic = L.divIcon({className:'', html:'<div class="pin' + (patrocinado(h) ? ' pat' : '') + (selecionado === h.id ? ' sel' : '') + '">' + (ICONES[h.categoria] || '📍') + '</div>', iconSize:[36,36], iconAnchor:[18,18]});
+      const ic = L.divIcon({className:'', html:'<div class="pin' + (patrocinado(h) ? ' pat' : '') + (selecionado === h.id ? ' sel' : '') + '" style="--cat:' + (COR[h.categoria] || COR.outros) + '">' + (ICONES[h.categoria] || '📍') + '</div>', iconSize:[36,36], iconAnchor:[18,18]});
       const m = L.marker([h.latitude, h.longitude], {icon:ic, title:h.nome, keyboard:true, riseOnHover:true, zIndexOffset: patrocinado(h) ? 500 : 0});
       m.on('click', () => abrirDetalhe(h.id, true));
       m.addTo(camadaPins); pinsPorId[h.id] = m;
