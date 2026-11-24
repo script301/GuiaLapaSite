@@ -88,14 +88,17 @@
   .vazio{padding:28px 10px;text-align:center;color:var(--suave)}
 
   /* Detalhe */
-  .voltar{background:none;border:none;color:var(--azul-ceu);font-weight:700;font-size:16px;cursor:pointer;padding:8px 0}
-  .capa{width:100%;max-height:210px;object-fit:cover;border-radius:16px;margin:4px 0 8px}
+  .voltar{align-self:flex-start;background:none;border:none;color:var(--azul-ceu);font-weight:700;font-size:16px;cursor:pointer;padding:8px 0}
+  .capa-wrap{flex:1 1 auto;min-height:200px;max-height:46vh;display:flex;align-items:center;justify-content:center;background:var(--campo);border-radius:16px;overflow:hidden;margin:4px 0 8px}
+  .capa{max-width:100%;max-height:100%;object-fit:contain;display:block}
+  #detalhe:not([hidden]){display:flex;flex-direction:column;min-height:100%}
+  .det{display:flex;flex-direction:column;flex:1 1 auto;min-height:100%}
   .det h2{margin:4px 0 2px;font-size:23px}
   .linha{display:flex;gap:10px;margin:8px 0;color:var(--texto)}
   .linha .ic{flex:0 0 24px;text-align:center}
   .linha span.s{color:var(--suave)}
   .destaque{background:var(--campo);border-radius:14px;padding:10px 12px}
-  .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+  .btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto;padding-top:14px}
   .btn{flex:1 1 130px;text-align:center;text-decoration:none;padding:13px 10px;border-radius:14px;font-weight:700;font-size:16px;border:2px solid var(--azul);background:var(--azul);color:#fff;cursor:pointer}
   .btn.sec{background:transparent;color:var(--azul)}
   html[data-tema="escuro"] .btn{background:var(--azul-ceu);border-color:var(--azul-ceu)}
@@ -311,7 +314,7 @@
     $('detalhe').innerHTML =
       '<div class="det">' +
       '<button class="voltar" id="voltar">← Voltar à lista</button>' +
-      (urlSegura(h.foto_url) ? '<img class="capa" src="' + esc(h.foto_url) + '" alt="Foto de ' + esc(h.nome) + '">' : '') +
+      (urlSegura(h.foto_url) ? '<div class="capa-wrap"><img class="capa" src="' + esc(h.foto_url) + '" alt="Foto de ' + esc(h.nome) + '"></div>' : '') +
       (patrocinado(h) ? '<span class="tag">★ PATROCINADO</span>' : '') +
       '<h2>' + esc(h.nome) + '</h2>' +
       '<div class="linha"><span class="ic">' + (ICONES[h.categoria] || '📍') + '</span><span class="s">' + esc(CATEGORIAS[h.categoria] || 'Local') + (d != null ? ' · a ' + fmtDist(d) : '') + '</span></div>' +
@@ -330,7 +333,7 @@
     $('rolagem').scrollTop = 0;
     $('voltar').addEventListener('click', fecharDetalhe);
     try { history.replaceState(null, '', '#' + h.id); } catch (_) {}
-    if (!ehDesktop() && painel.dataset.estado !== 'alto') estado('meio');
+    if (!ehDesktop()) estado('alto');
     pintarLista(); // atualiza destaque do pino
     if (temPos) irPara(h.latitude, h.longitude, 17);
   }
