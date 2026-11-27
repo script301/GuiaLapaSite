@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://unpkg.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://unpkg.com https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https: blob:; connect-src 'self' https://ytuioyhxrvvowxsjvlxt.supabase.co https://*.tile.openstreetmap.org; frame-ancestors 'none';">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
 <title>Guia Lapa – Bom Jesus da Lapa</title>
 <meta name="description" content="Comércios, serviços e turismo de Bom Jesus da Lapa-BA, com mapa e avisos da cidade.">
 <meta name="theme-color" content="#0B2D6B">
@@ -12,25 +14,29 @@
 <link rel="manifest" href="manifest.json">
 <link rel="icon" href="marca/icone_app.png">
 <link rel="apple-touch-icon" href="marca/apple-touch-icon.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="consentimento.css">
+<link rel="preload" as="style" href="fonts/inter.css">
+<link rel="stylesheet" href="fonts/inter.css">
+<link rel="preload" as="style" href="fonts/fraunces.css">
+<link rel="stylesheet" href="fonts/fraunces.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
   :root{
-    --azul:#0B2D6B; --azul-ceu:#2980EB; --laranja:#F57C00; --amarelo:#FFC107;
+    --azul:#0B2D6B; --azul-ceu:#146DDB; --laranja:#F57C00; --amarelo:#FFC107;
     --fundo:#F5F5F5; --painel:#ffffff; --texto:#1b2430; --suave:#5b6573; --borda:#e3e7ee; --campo:#f1f3f6;
     --sombra:0 -6px 24px rgba(11,45,107,.18);
+    --foco:#146DDB;
   }
   html[data-tema="escuro"]{
     --fundo:#0e1116; --painel:#171c23; --texto:#eef1f5; --suave:#a9b3c0; --borda:#2a313b; --campo:#222934;
     --sombra:0 -6px 24px rgba(0,0,0,.5);
+    --foco:#2d83ec;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;display:flex;flex-direction:column;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--fundo);color:var(--texto);font-size:16px;line-height:1.4;overflow:hidden}
   button{font:inherit;color:inherit}
-  :focus-visible{outline:3px solid var(--azul-ceu);outline-offset:2px}
+  :focus-visible{outline:3px solid var(--foco);outline-offset:2px}
 
   /* Topo */
   header{flex:0 0 auto;background:var(--azul);color:#fff;padding:8px 12px;padding-top:max(8px,env(safe-area-inset-top));display:flex;align-items:center;gap:10px;z-index:1200}
@@ -133,7 +139,7 @@
     --fundo:#0C1018; --painel:rgba(22,28,38,.86); --texto:#EEF1F5; --suave:#B3BDCB; --borda:#2B3442; --campo:#1C2430;
   }
   body{background:var(--fundo)}
-  header{background:linear-gradient(120deg,#0B2D6B,#14428F);box-shadow:0 2px 12px rgba(11,45,107,.25)}
+  header{background:linear-gradient(120deg,#0B2D6B,#104A9E);box-shadow:0 2px 12px rgba(11,45,107,.25)}
   header .lema{font-family:var(--serif);font-style:italic;font-size:14px;opacity:.95}
   #painel{background:var(--painel)}
   html[data-tema="escuro"] #painel{-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
@@ -170,12 +176,13 @@
 
   /* botões com cantos mais suaves e foco visível */
   .btn{border-radius:14px;box-shadow:0 2px 6px rgba(11,45,107,.18)}
-  .btn:focus-visible,.chip:focus-visible,.cartao:focus-visible{outline:3px solid #2980EB;outline-offset:2px}
+  .btn:focus-visible,.chip:focus-visible,.cartao:focus-visible{outline:3px solid var(--foco);outline-offset:2px}
   .instalar{border-radius:var(--raio)}
   @media (prefers-reduced-motion: reduce){ .cartao{transition:none} }
 </style>
 </head>
 <body>
+<a href="#main" class="skip-link">Pular para o conteúdo principal</a>
 <header>
   <img src="marca/logo_nome.png" alt="Guia Lapa">
   <div class="lema">Explore, conheça, viva a nossa Lapa!</div>
@@ -201,14 +208,27 @@
         <div style="margin-top:6px"><b>iPhone:</b> no Safari, toque em Compartilhar e depois em <b>Adicionar à Tela de Início</b>.</div>
         <div class="btns" id="botoes-app"></div>
       </section>
-      <div class="rodape">Guia Lapa · <a href="politica-de-privacidade.html">Política de privacidade</a></div>
+      <div id="main" class="rodape">
+        Guia Lapa ·
+        <a href="politica-de-privacidade.html">Política de privacidade</a> ·
+        <a href="termos-de-uso.html">Termos de uso</a> ·
+        <a href="politica-de-cookies.html">Política de cookies</a> ·
+        <a href="declaracao-de-acessibilidade.html">Acessibilidade</a>
+      </div>
+      <button type="button" data-abrir-preferencias-cookies class="footer-cookie-link">Preferências de cookies</button>
     </div>
   </aside>
   <div id="mapa" role="region" aria-label="Mapa da cidade"></div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<!-- Chave Supabase anon (rotacionada no painel Supabase) — NÃO COMITE ESTA CHAVE NO GIT -->
+<!-- Em produção/injeção CI/CD: substitua o valor abaixo por variável de ambiente -->
+<script>
+  window.SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl0dWlveWh4cnZ2b3d4c2p2bHh0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQwMTE1ODQsImV4cCI6MjEwOTU4NzU4NH0.JIvuH8eJz8HMrHXFeefUZIaBJAMnmQ7C_4_IhZlXPrg';
+</script>
 <script src="config.js"></script>
+<script src="consentimento.js"></script>
 <script>
 (function(){
   'use strict';
@@ -231,6 +251,9 @@
   let locais = [], extras = {avisos:[], anuncios:[], config:{}};
   let filtro = 'todas', termo = '', selecionado = null, posicao = null;
   let mapa, camadaAvisos, camadaPins, pinsPorId = {}, marcadorEu = null;
+  // Expor no window para o script de mapa ativado pós-consentimento
+  window.mapa = null; window.camadaAvisos = null; window.camadaPins = null;
+  window.desenharPins = null; window.locaisRef = null;
   let anuncioIdx = 0, anuncioTimer = null; const anunciosVistos = new Set();
 
   // ---------- Tema ----------
@@ -262,7 +285,7 @@
   const ESTADOS = ['baixo','meio','alto'];
   function estado(e){
     painel.dataset.estado = e;
-    setTimeout(() => mapa && mapa.invalidateSize(), 320);
+    setTimeout(() => window.mapa && window.mapa.invalidateSize(), 320);
   }
   function subir(){ const i = ESTADOS.indexOf(painel.dataset.estado); estado(ESTADOS[Math.min(2, i + 1)]); }
   function descer(){ const i = ESTADOS.indexOf(painel.dataset.estado); estado(ESTADOS[Math.max(0, i - 1)]); }
@@ -337,23 +360,23 @@
 
   // ---------- Mapa ----------
   function desenharPins(itens){
-    camadaPins.clearLayers(); pinsPorId = {};
+    window.camadaPins.clearLayers(); pinsPorId = {};
     itens.forEach(h => {
       if (h.latitude == null || h.longitude == null) return;
       const ic = L.divIcon({className:'', html:'<div class="pin' + (patrocinado(h) ? ' pat' : '') + (selecionado === h.id ? ' sel' : '') + '" style="--cat:' + (COR[h.categoria] || COR.outros) + '">' + (ICONES[h.categoria] || '📍') + '</div>', iconSize:[36,36], iconAnchor:[18,18]});
       const m = L.marker([h.latitude, h.longitude], {icon:ic, title:h.nome, keyboard:true, riseOnHover:true, zIndexOffset: patrocinado(h) ? 500 : 0});
       m.on('click', () => abrirDetalhe(h.id, true));
-      m.addTo(camadaPins); pinsPorId[h.id] = m;
+      m.addTo(window.camadaPins); pinsPorId[h.id] = m;
     });
   }
 
   function irPara(lat, lng, zoom){
-    const z = Math.max(mapa.getZoom(), zoom || 16);
+    const z = Math.max(window.mapa.getZoom(), zoom || 16);
     let alvo = [lat, lng];
     if (!ehDesktop()){ // sobe o ponto para não ficar embaixo da lista
-      const p = mapa.project(alvo, z); p.y += mapa.getSize().y * 0.22; alvo = mapa.unproject(p, z);
+      const p = window.mapa.project(alvo, z); p.y += window.mapa.getSize().y * 0.22; alvo = window.mapa.unproject(p, z);
     }
-    mapa.flyTo(alvo, z, {duration:.6});
+    window.mapa.flyTo(alvo, z, {duration:.6});
   }
 
   // ---------- Detalhe ----------
@@ -406,7 +429,7 @@
     return 'Até ' + f(a.ate);
   }
   function pintarAvisos(){
-    camadaAvisos.clearLayers();
+    window.camadaAvisos.clearLayers();
     const lista = (extras.avisos || []).filter(noAr);
     $('avisos').innerHTML = lista.map((a, i) => {
       const t = TIPOS[a.tipo] || TIPOS.aviso;
@@ -417,13 +440,13 @@
       const t = TIPOS[a.tipo] || TIPOS.aviso;
       const pontos = [];
       if (Array.isArray(a.trajeto) && a.trajeto.length > 1){
-        L.polyline(a.trajeto, {color:t[2], weight:7, opacity:.9}).addTo(camadaAvisos);
+        L.polyline(a.trajeto, {color:t[2], weight:7, opacity:.9}).addTo(window.camadaAvisos);
         pontos.push(a.trajeto[Math.floor(a.trajeto.length / 2)]);
       }
       (Array.isArray(a.marcadores) ? a.marcadores : []).forEach(p => pontos.push(p));
       pontos.forEach(p => {
         const ic = L.divIcon({className:'', html:'<div class="pin av" style="--cor:' + t[2] + '">' + t[0] + '</div>', iconSize:[36,36], iconAnchor:[18,18]});
-        L.marker(p, {icon:ic, title:a.titulo || t[1], keyboard:true}).on('click', () => focarAviso(i)).addTo(camadaAvisos);
+        L.marker(p, {icon:ic, title:a.titulo || t[1], keyboard:true}).on('click', () => focarAviso(i)).addTo(window.camadaAvisos);
       });
     });
     $('avisos')._lista = lista;
@@ -431,7 +454,7 @@
   function focarAviso(i){
     const a = ($('avisos')._lista || [])[i]; if (!a) return;
     const pts = (Array.isArray(a.trajeto) ? a.trajeto : []).concat(Array.isArray(a.marcadores) ? a.marcadores : []);
-    if (pts.length) mapa.fitBounds(pts, {padding:[60, 60], maxZoom:17});
+    if (pts.length) window.mapa.fitBounds(pts, {padding:[60, 60], maxZoom:17});
     if (!ehDesktop()) estado('baixo');
   }
 
@@ -469,7 +492,7 @@
   $('chips').addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return; filtro = b.dataset.c; pintarChips(); pintarLista(); });
   $('busca').addEventListener('input', e => { termo = e.target.value.trim().toLowerCase(); if ($('detalhe').hidden === false) fecharDetalhe(); pintarLista(); });
   $('avisos').addEventListener('click', e => { const b = e.target.closest('.aviso'); if (b) focarAviso(+b.dataset.i); });
-  window.addEventListener('resize', () => { if (mapa) mapa.invalidateSize(); pintarAnuncio(); });
+  window.addEventListener('resize', () => { if (window.mapa) window.mapa.invalidateSize(); pintarAnuncio(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('detalhe').hidden) fecharDetalhe(); });
 
   $('btn-perto').addEventListener('click', () => {
@@ -477,17 +500,15 @@
     navigator.geolocation.getCurrentPosition(p => {
       posicao = {lat:p.coords.latitude, lng:p.coords.longitude};
       if (marcadorEu) marcadorEu.remove();
-      marcadorEu = L.marker([posicao.lat, posicao.lng], {icon:L.divIcon({className:'', html:'<div class="eu"></div>', iconSize:[18,18], iconAnchor:[9,9]}), interactive:false}).addTo(mapa);
+      marcadorEu = L.marker([posicao.lat, posicao.lng], {icon:L.divIcon({className:'', html:'<div class="eu"></div>', iconSize:[18,18], iconAnchor:[9,9]}), interactive:false}).addTo(window.mapa);
       pintarLista();
-      mapa.flyTo([posicao.lat, posicao.lng], 16, {duration:.6});
+      window.mapa.flyTo([posicao.lat, posicao.lng], 16, {duration:.6});
     }, () => alert('Não foi possível pegar sua localização. Verifique a permissão do navegador.'), {enableHighAccuracy:true, timeout:10000});
   });
 
   // ---------- Início ----------
-  mapa = L.map('mapa', {zoomControl:true}).setView([-13.2550, -43.4108], 15);
-  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, attribution:'&copy; OpenStreetMap'}).addTo(mapa);
-  camadaAvisos = L.layerGroup().addTo(mapa);
-  camadaPins = L.layerGroup().addTo(mapa);
+  // O mapa (Leaflet/OpenStreetMap) é conteúdo de terceiros → categoria "funcionalidades"
+  // O script abaixo será ativado pelo consentimento.js quando o usuário autorizar essa categoria
 
   const botoes = $('botoes-app');
   const apk = urlSegura(CFG.apkUrl);
@@ -500,10 +521,10 @@
     try {
       const [h, ex] = await Promise.all([rpc('app_publico_hoteis'), rpc('app_publico_extras').catch(() => ({}))]);
       locais = Array.isArray(h.hoteis) ? h.hoteis : [];
+      window.locaisRef = locais; // expor para o script de mapa pós-consentimento
+      window.desenharPins = desenharPins; // expor função de desenhar pins
       extras = {avisos: ex.avisos || [], anuncios: ex.anuncios || [], config: ex.config || {}};
       pintarChips(); pintarLista(); pintarAvisos(); pintarAnuncio();
-      const pts = locais.filter(x => x.latitude != null && x.longitude != null).map(x => [x.latitude, x.longitude]);
-      if (pts.length > 1) mapa.fitBounds(pts, {padding:[40, 40], maxZoom:16});
       const id = decodeURIComponent((location.hash || '').slice(1));
       if (id) abrirDetalhe(id, false);
     } catch (err) {
@@ -515,5 +536,33 @@
   setInterval(() => rpc('app_publico_extras').then(ex => { extras = {avisos: ex.avisos || [], anuncios: ex.anuncios || [], config: ex.config || {}}; pintarAvisos(); pintarAnuncio(); }).catch(() => {}), 300000);
 })();
 </script>
+
+<!-- Mapa: carregado somente após consentimento na categoria "funcionalidades" -->
+<script type="text/plain" data-categoria-consentimento="funcionalidades">
+(function(){
+  'use strict';
+  if (window.mapaIniciado) return;
+  window.mapaIniciado = true;
+  window.mapa = L.map('mapa', {zoomControl:true}).setView([-13.2550, -43.4108], 15);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, attribution:'&copy; OpenStreetMap'}).addTo(window.mapa);
+  window.camadaAvisos = L.layerGroup().addTo(window.mapa);
+  window.camadaPins = L.layerGroup().addTo(window.mapa);
+  // Re-des-enha pins se houver locais carregados
+  if (typeof window.desenharPins === 'function' && window.locaisRef) {
+    window.desenharPins(window.locaisRef);
+  }
+  // Ajusta bounds se já temos pontos
+  if (window.locaisRef && window.locaisRef.length) {
+    const pts = window.locaisRef.filter(x => x.latitude != null && x.longitude != null).map(x => [x.latitude, x.longitude]);
+    if (pts.length > 1) window.mapa.fitBounds(pts, {padding:[40, 40], maxZoom:16});
+  }
+})();
+</script>
+
+<!-- Aviso no lugar do mapa enquanto não há consentimento -->
+<div id="mapa-aviso" class="bc-aviso-bloqueado" data-categoria-consentimento="funcionalidades" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;background:var(--fundo);z-index:10">
+  <p style="margin:0 0 1rem;text-align:center;max-width:28rem;">O mapa interativo usa tiles do OpenStreetMap (servidores de terceiros). Para carregá-lo, autorize a categoria <strong>"Conteúdo de terceiros"</strong> nas preferências de cookies.</p>
+  <button type="button" class="bc-botao" data-abrir-preferencias-cookies style="min-height:44px;padding:.75rem 1.5rem;">Abrir preferências e autorizar mapa</button>
+</div>
 </body>
 </html>

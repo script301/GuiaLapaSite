@@ -1,117 +1,242 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0B2D6B">
-<title>Política de Privacidade – Guia Lapa</title>
-<link rel="icon" href="marca/icone_app.png">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --azul:#0B2D6B; --azul-ceu:#2980EB; --fundo:#FBF8F2; --painel:#FFFFFF;
-    --texto:#1B2430; --suave:#4F5A68; --borda:#E8E2D6; --campo:#F4EFE5;
-    --serif:"Fraunces",Georgia,"Times New Roman",serif;
-  }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-tema="claro"]){
-      --fundo:#0C1018; --painel:#161C26; --texto:#EEF1F5; --suave:#B3BDCB; --borda:#2B3442; --campo:#1C2430;
-    }
-  }
-  :root[data-tema="escuro"]{
-    --fundo:#0C1018; --painel:#161C26; --texto:#EEF1F5; --suave:#B3BDCB; --borda:#2B3442; --campo:#1C2430;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--fundo);color:var(--texto);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:16px;line-height:1.6}
-  header{background:linear-gradient(120deg,#0B2D6B,#14428F);color:#fff;padding:18px 20px;display:flex;align-items:center;gap:14px}
-  header img{height:40px;display:block}
-  header a{color:#fff;text-decoration:none;font-weight:700;margin-left:auto;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.14)}
-  header a:hover{background:rgba(255,255,255,.24)}
-  header a:focus-visible,a:focus-visible{outline:3px solid var(--azul-ceu);outline-offset:2px}
-  main{max-width:760px;margin:0 auto;padding:28px 18px 56px}
-  h1{font-family:var(--serif);font-size:clamp(28px,5vw,36px);line-height:1.15;margin:4px 0 6px;color:var(--texto)}
-  .atualizacao{color:var(--suave);font-size:14px;margin:0 0 20px}
-  .intro{background:var(--painel);border:1px solid var(--borda);border-left:5px solid #2980EB;border-radius:18px;padding:16px 18px;margin-bottom:14px}
-  .card{background:var(--painel);border:1px solid var(--borda);border-radius:18px;padding:16px 18px 6px;margin:14px 0;box-shadow:0 1px 2px rgba(0,0,0,.04)}
-  h2{font-family:var(--serif);font-size:20px;margin:6px 0 8px;color:var(--azul)}
-  :root[data-tema="escuro"] h2{color:#9DC4F5}
-  @media (prefers-color-scheme: dark){ :root:not([data-tema="claro"]) h2{color:#9DC4F5} }
-  p{margin:0 0 12px}
-  ul{padding-left:20px;margin:0 0 12px}
-  li{margin-bottom:8px}
-  b{font-weight:700}
-  .lembrete{background:var(--campo);border-radius:14px;padding:12px 14px;font-size:15px;color:var(--suave)}
-  .contato{background:var(--campo);border-radius:14px;padding:14px 16px;margin-top:6px}
-  .marca{margin:34px 0 0;text-align:center;color:var(--suave);font-size:14px}
-  .marca a{color:var(--azul-ceu);font-weight:700}
-  .troque{background:#FFF3C4;color:#5C4400;padding:0 4px;border-radius:4px;font-weight:700}
-  @media (max-width:520px){ header{padding:14px} header img{height:34px} }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Política de Privacidade do Guia Lapa - Como tratamos seus dados pessoais conforme a LGPD">
+  <title>Política de Privacidade | Guia Lapa</title>
+  <link rel="stylesheet" href="consentimento.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" as="style" href="fonts/inter.css">
+  <link rel="stylesheet" href="fonts/inter.css">
+  <link rel="preload" as="style" href="fonts/fraunces.css">
+  <link rel="stylesheet" href="fonts/fraunces.css">
 </head>
 <body>
-<header>
-  <img src="marca/logo_nome.png" alt="Guia Lapa">
-  <a href="./">← Voltar ao mapa</a>
-</header>
+  <a href="#main" class="skip-link">Pular para o conteúdo principal</a>
 
-<main>
-  <h1>Política de Privacidade</h1>
-  <p class="atualizacao">Última atualização: novembro de 2026</p>
-
-  <div class="intro">
-    <p>O Guia Lapa é um aplicativo gratuito com mapa e guia de comércios, hotéis e pontos de Bom Jesus da Lapa – BA. Esta página explica quais dados usamos e por quê, conforme a LGPD (Lei 13.709/2018).</p>
-  </div>
-
-  <section class="card">
-    <h2>O que você pode fazer sem conta</h2>
-    <p>Ver o mapa, os locais, avaliações e perguntas. Nenhum dado pessoal é pedido.</p>
-  </section>
-
-  <section class="card">
-    <h2>Dados coletados quando você cria uma conta</h2>
-    <ul>
-      <li><b>Nome de usuário</b> e <b>senha numérica</b> (guardada apenas de forma criptografada, nunca em texto).</li>
-      <li><b>Conteúdo que você publica</b>: locais cadastrados, fotos, avaliações, perguntas, respostas e denúncias. Esse conteúdo é público dentro do app, junto com seu nome de usuário.</li>
-      <li><b>Localização</b>: usada apenas no momento de avaliar um local, para confirmar que você está perto dele, e para mostrar sua posição no mapa. A localização exata não é guardada em nosso servidor.</li>
-      <li><b>Endereço de rede (IP)</b>: usado temporariamente para limitar abusos (cadastros em massa).</li>
-    </ul>
-  </section>
-
-  <section class="card">
-    <h2>Para que usamos</h2>
-    <p>Para o funcionamento do app, moderação de conteúdo, segurança e para contar quantas vezes um anúncio foi exibido ou tocado (sem identificar você).</p>
-  </section>
-
-  <section class="card">
-    <h2>Anúncios</h2>
-    <p>O app exibe anúncios de comércios locais, escolhidos manualmente pelo administrador. Não usamos rastreamento publicitário nem vendemos dados.</p>
-  </section>
-
-  <section class="card">
-    <h2>Compartilhamento</h2>
-    <p>Seus dados ficam em servidores do Supabase, nossa provedora de infraestrutura. Não vendemos nem repassamos dados a terceiros. Podem ser fornecidos se exigido por lei.</p>
-  </section>
-
-  <section class="card">
-    <h2>Seus direitos</h2>
-    <p>Você pode trocar sua senha e <b>excluir sua conta</b> a qualquer momento em Perfil → Excluir conta. Suas avaliações e perguntas são apagadas junto. Para qualquer pedido sobre seus dados, fale com o contato abaixo.</p>
-  </section>
-
-  <section class="card">
-    <h2>Crianças</h2>
-    <p>O app não é direcionado a menores de 13 anos.</p>
-  </section>
-
-  <section class="card">
-    <h2>Contato</h2>
-    <div class="contato">
-      <p style="margin:0">Responsável: <span class="troque">Bruno Moura</span><br>WhatsApp/e-mail: <span class="troque">77 9 9965-9126</span></p>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo" aria-label="Guia Lapa - Início">
+        <img src="marca/logo-192.png" alt="" width="48" height="48" loading="lazy">
+        <span>Guia Lapa</span>
+      </a>
+      <nav class="main-nav" aria-label="Navegação principal">
+        <a href="index.html">Início</a>
+        <a href="politica-de-privacidade.html" aria-current="page">Política de Privacidade</a>
+        <a href="termos-de-uso.html">Termos de Uso</a>
+        <a href="politica-de-cookies.html">Política de Cookies</a>
+      </nav>
     </div>
-  </section>
+  </header>
 
-  <p class="marca"><a href="./">Voltar ao mapa</a> · Guia Lapa</p>
-</main>
+  <main id="main" class="container">
+    <article class="legal-page">
+      <header class="legal-header">
+        <h1>Política de Privacidade</h1>
+        <p class="legal-meta"><strong>Última atualização:</strong> 2026-11-25 · <strong>Versão:</strong> 1.0</p>
+      </header>
+
+      <section class="legal-section">
+        <h2>Resumo</h2>
+        <ul>
+          <li>Coletamos <strong>nome, e-mail, telefone, localização aproximada (IP), dados de navegação e avaliações</strong> para prestar o serviço de guia comercial, exibir mapas interativos e permitir avaliações de estabelecimentos.</li>
+          <li>Não vendemos seus dados pessoais.</li>
+          <li>Cookies de estatística e conteúdos de terceiros (mapas) só são usados com sua autorização, que você pode mudar a qualquer momento em <strong>Preferências de cookies</strong>, no rodapé.</li>
+          <li>Você pode acessar, corrigir, excluir ou levar seus dados para outro serviço — veja <a href="#direitos">Seus direitos</a>.</li>
+        </ul>
+      </section>
+
+      <section class="legal-section" id="controlador">
+        <h2>1. Quem é o responsável pelos seus dados</h2>
+        <p>O controlador é <strong>Bruno Moura da Silva Oliveira</strong>, inscrito no CPF <strong>119.494.764-50</strong>, com endereço em <strong>Rua L, 69, Bairro São João, Bom Jesus da Lapa – BA, CEP 47600-000</strong>.</p>
+        <p>Para assuntos de privacidade, use o canal <strong>bmourasilvaoliveira@gmail.com</strong>, que é atendido por nossa equipe responsável.</p>
+      </section>
+
+      <section class="legal-section" id="encarregado">
+        <h2>Encarregado de Dados (DPO)</h2>
+        <p>Conforme o art. 41 da LGPD e a Resolução CD/ANPD nº 2/2022, que dispensa agentes de tratamento de pequeno porte da obrigatoriedade de indicação formal de Encarregado, mantemos o canal de atendimento acima como ponto de contato para titulares de dados e a ANPD. O responsável pelo tratamento atua como canal direto.</p>
+        <p><strong>Contato do Encarregado:</strong> <a href="mailto:bmourasilvaoliveira@gmail.com">bmourasilvaoliveira@gmail.com</a></p>
+      </section>
+
+      <section class="legal-section" id="dados-tratados">
+        <h2>2. Quais dados tratamos, para quê e com qual base legal</h2>
+        <table class="legal-table">
+          <thead>
+            <tr>
+              <th>Quando</th>
+              <th>Dados</th>
+              <th>Para quê</th>
+              <th>Base legal (LGPD)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Você envia uma avaliação ou pergunta</td>
+              <td>Nome, e-mail, telefone, conteúdo da mensagem, estabelecimento avaliado</td>
+              <td>Publicar sua avaliação/pergunta e permitir resposta do estabelecimento</td>
+              <td>Execução de contrato / Legítimo interesse (art. 7º, V e IX)</td>
+            </tr>
+            <tr>
+              <td>Você usa a geolocalização</td>
+              <td>Coordenadas GPS (latitude/longitude) — apenas no navegador, não armazenamos no servidor</td>
+              <td>Mostrar estabelecimentos próximos a você no mapa</td>
+              <td>Execução de contrato (art. 7º, V)</td>
+            </tr>
+            <tr>
+              <td>Você navega no site</td>
+              <td>Endereço IP, data e hora de acesso, navegador, dispositivo, páginas acessadas</td>
+              <td>Segurança, prevenção a fraudes e cumprimento do Marco Civil (guarda de registros de acesso)</td>
+              <td>Obrigação legal (art. 7º, II) e legítimo interesse (art. 7º, IX)</td>
+            </tr>
+            <tr>
+              <td>Você aceita cookies de estatística</td>
+              <td>Identificadores de cookie, páginas visitadas, interações, localização aproximada</td>
+              <td>Entender o uso do site e melhorá-lo</td>
+              <td>Consentimento (art. 7º, I)</td>
+            </tr>
+            <tr>
+              <td>Você autoriza conteúdo de terceiros (mapas)</td>
+              <td>Dados de navegação enviados ao provedor de tiles do mapa</td>
+              <td>Exibir mapa interativo (Leaflet/OpenStreetMap)</td>
+              <td>Consentimento (art. 7º, I)</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>Coletamos apenas os dados necessários para essas finalidades. A geolocalização é processada apenas no seu navegador e não é enviada ao nosso backend.</p>
+      </section>
+
+      <section class="legal-section" id="compartilhamento">
+        <h2>3. Com quem compartilhamos</h2>
+        <p>Não vendemos seus dados pessoais. Compartilhamos apenas o necessário com:</p>
+        <ul>
+          <li><strong>Fornecedores que operam o serviço para nós</strong>, sob contrato e com dever de confidencialidade:
+            <ul>
+              <li><strong>Supabase</strong> (banco de dados PostgreSQL, autenticação, funções RPC) — EUA</li>
+              <li><strong>Leaflet / OpenStreetMap</strong> (tiles de mapa) — servidores globais</li>
+            </ul>
+          </li>
+          <li><strong>Plataformas de estatística</strong>, somente se você autorizar: <strong>Google Analytics</strong> (se ativado via cookies de estatística).</li>
+          <li><strong>Autoridades públicas</strong>, quando exigido por lei ou ordem judicial.</li>
+        </ul>
+      </section>
+
+      <section class="legal-section" id="transferencia-internacional">
+        <h2>4. Transferência internacional</h2>
+        <p>Alguns fornecedores armazenam ou processam dados fora do Brasil, principalmente nos <strong>Estados Unidos</strong> (<strong>Supabase</strong>). Nesses casos, adotamos as garantias previstas no art. 33 da LGPD, como cláusulas contratuais padrão e fornecedores com padrões de proteção compatíveis.</p>
+      </section>
+
+      <section class="legal-section" id="cookies">
+        <h2>5. Cookies e tecnologias semelhantes</h2>
+        <p>Usamos cookies estritamente necessários para o funcionamento do site (sessão, preferências de consentimento, tema). Cookies de estatística e conteúdos de terceiros (mapas) só são ativados se você autorizar no aviso de cookies. Você pode mudar sua escolha a qualquer momento em <strong>Preferências de cookies</strong>, no rodapé. Detalhes em nossa <a href="politica-de-cookies.html">Política de Cookies</a>.</p>
+      </section>
+
+      <section class="legal-section" id="retencao">
+        <h2>6. Por quanto tempo guardamos</h2>
+        <table class="legal-table">
+          <thead>
+            <tr>
+              <th>Dado</th>
+              <th>Prazo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Registros de acesso (IP, data e hora)</td>
+              <td>6 meses (Marco Civil da Internet, art. 15)</td>
+            </tr>
+            <tr>
+              <td>Dados de avaliações e perguntas</td>
+              <td>Enquanto a avaliação estiver publicada e, após remoção, pelo prazo necessário para cumprir obrigações legais ou defender direitos</td>
+            </tr>
+            <tr>
+              <td>Preferências de cookies (localStorage)</td>
+              <td>12 meses</td>
+            </tr>
+            <tr>
+              <td>Dados de navegação para estatística (se autorizado)</td>
+              <td>Conforme política do provedor (ex.: Google Analytics: 26 meses)</td>
+            </tr>
+          </tbody>
+        </table>
+        <p>Após esses prazos, os dados são eliminados ou anonimizados.</p>
+      </section>
+
+      <section class="legal-section" id="direitos">
+        <h2>7. Seus direitos</h2>
+        <p>Pela LGPD (art. 18), você pode, a qualquer momento e gratuitamente:</p>
+        <ul>
+          <li>confirmar se tratamos seus dados e <strong>acessá-los</strong>;</li>
+          <li><strong>corrigir</strong> dados incompletos, inexatos ou desatualizados;</li>
+          <li>pedir <strong>anonimização, bloqueio ou eliminação</strong> de dados desnecessários ou tratados em desconformidade;</li>
+          <li>pedir a <strong>portabilidade</strong> dos dados a outro fornecedor;</li>
+          <li>pedir a <strong>eliminação</strong> dos dados tratados com base no seu consentimento;</li>
+          <li>saber <strong>com quem compartilhamos</strong> seus dados;</li>
+          <li>ser informado sobre a possibilidade de <strong>não consentir</strong> e suas consequências;</li>
+          <li><strong>revogar o consentimento</strong>;</li>
+          <li>pedir <strong>revisão de decisões automatizadas</strong>;</li>
+          <li>apresentar reclamação à <strong>Autoridade Nacional de Proteção de Dados (ANPD)</strong>.</li>
+        </ul>
+        <p><strong>Como exercer:</strong> envie um e-mail para <strong>bmourasilvaoliveira@gmail.com</strong> com o assunto "LGPD - Direitos do Titular". Podemos pedir informações para confirmar sua identidade. Respondemos em até 15 dias.</p>
+      </section>
+
+      <section class="legal-section" id="seguranca">
+        <h2>8. Segurança</h2>
+        <p>Adotamos medidas técnicas e administrativas para proteger seus dados, como conexão criptografada (HTTPS), controle de acesso via Supabase (RLS), autenticação segura e validação de entrada. Nenhum sistema é totalmente imune a incidentes; se ocorrer um incidente que possa trazer risco ou dano relevante, comunicaremos você e a ANPD nos termos da lei.</p>
+      </section>
+
+      <section class="legal-section" id="criancas">
+        <h2>9. Crianças e adolescentes</h2>
+        <p>O Guia Lapa não é direcionado a menores de 18 anos e não coletamos intencionalmente dados de crianças. Se você acredita que coletamos dados de uma criança, fale conosco para que sejam excluídos.</p>
+      </section>
+
+      <section class="legal-section" id="alteracoes">
+        <h2>10. Alterações desta Política</h2>
+        <p>Podemos atualizar esta Política para refletir mudanças no serviço ou na lei. A data da última atualização fica no topo. Mudanças relevantes serão comunicadas por aviso no site e/ou e-mail.</p>
+      </section>
+
+      <section class="legal-section" id="contato">
+        <h2>11. Como falar conosco</h2>
+        <ul>
+          <li><strong>Privacidade e direitos do titular:</strong> bmourasilvaoliveira@gmail.com</li>
+          <li><strong>Atendimento geral:</strong> bmourasilvaoliveira@gmail.com · (77) 99965-9126</li>
+          <li><strong>Endereço:</strong> Rua L, 69, Bairro São João, Bom Jesus da Lapa – BA, CEP 47600-000</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="marca/logo-192.png" alt="" width="48" height="48" loading="lazy">
+        <p>Guia Lapa — Guia comercial e turístico de Bom Jesus da Lapa</p>
+      </div>
+      <nav class="footer-nav" aria-label="Links legais e institucionais">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="politica-de-privacidade.html">Política de Privacidade</a></li>
+          <li><a href="termos-de-uso.html">Termos de Uso</a></li>
+          <li><a href="politica-de-cookies.html">Política de Cookies</a></li>
+          <li><a href="declaracao-de-acessibilidade.html">Declaração de Acessibilidade</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-nav" aria-label="Contato e redes">
+        <h3>Contato</h3>
+        <ul>
+          <li><a href="mailto:bmourasilvaoliveira@gmail.com">bmourasilvaoliveira@gmail.com</a></li>
+          <li><a href="https://wa.me/5577999659126" target="_blank" rel="noopener">(77) 99965-9126</a></li>
+          <li>Rua L, 69, Bairro São João<br>Bom Jesus da Lapa – BA, 47600-000</li>
+        </ul>
+      </nav>
+      <div class="footer-company">
+        <p><strong>Bruno Moura da Silva Oliveira</strong> · CPF 119.494.764-50</p>
+      </div>
+      <p class="footer-copyright">&copy; 2026 Guia Lapa. Todos os direitos reservados.</p>
+      <button type="button" data-abrir-preferencias-cookies class="footer-cookie-link">Preferências de cookies</button>
+    </div>
+  </footer>
+
+  <script src="consentimento.js"></script>
 </body>
 </html>
