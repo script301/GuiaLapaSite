@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
@@ -117,6 +117,7 @@
   .instalar h4{margin:0 0 6px;color:var(--texto);font-size:16px}
   .rodape{text-align:center;font-size:13px;color:var(--suave);padding:16px 0 4px}
   .rodape a{color:var(--azul-ceu)}
+  .footer-cookie-link{background:none;border:none;color:var(--azul-ceu);text-decoration:underline;cursor:pointer;font-size:13px;padding:4px 0;margin-top:6px;display:inline-block}
 
   /* Marcadores */
   .pin{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.45);font-size:17px;background:var(--azul);color:#fff;transition:transform .15s}
@@ -215,7 +216,9 @@
         <a href="politica-de-cookies.html">Política de cookies</a> ·
         <a href="declaracao-de-acessibilidade.html">Acessibilidade</a>
       </div>
-      <button type="button" data-abrir-preferencias-cookies class="footer-cookie-link">Preferências de cookies</button>
+      <div>
+        <button type="button" data-abrir-preferencias-cookies class="footer-cookie-link">Preferências de cookies</button>
+      </div>
     </div>
   </aside>
   <div id="mapa" role="region" aria-label="Mapa da cidade"></div>
@@ -250,7 +253,7 @@
 
   let locais = [], extras = {avisos:[], anuncios:[], config:{}};
   let filtro = 'todas', termo = '', selecionado = null, posicao = null;
-  let mapa, camadaAvisos, camadaPins, pinsPorId = {}, marcadorEu = null;
+  let pinsPorId = {}, marcadorEu = null;
   // Expor no window para o script de mapa ativado pós-consentimento
   window.mapa = null; window.camadaAvisos = null; window.camadaPins = null;
   window.desenharPins = null; window.locaisRef = null;
@@ -360,6 +363,7 @@
 
   // ---------- Mapa ----------
   function desenharPins(itens){
+    if (!window.camadaPins) return;
     window.camadaPins.clearLayers(); pinsPorId = {};
     itens.forEach(h => {
       if (h.latitude == null || h.longitude == null) return;
@@ -371,6 +375,7 @@
   }
 
   function irPara(lat, lng, zoom){
+    if (!window.mapa) return;
     const z = Math.max(window.mapa.getZoom(), zoom || 16);
     let alvo = [lat, lng];
     if (!ehDesktop()){ // sobe o ponto para não ficar embaixo da lista
@@ -429,6 +434,7 @@
     return 'Até ' + f(a.ate);
   }
   function pintarAvisos(){
+    if (!window.camadaAvisos) return;
     window.camadaAvisos.clearLayers();
     const lista = (extras.avisos || []).filter(noAr);
     $('avisos').innerHTML = lista.map((a, i) => {
@@ -454,7 +460,7 @@
   function focarAviso(i){
     const a = ($('avisos')._lista || [])[i]; if (!a) return;
     const pts = (Array.isArray(a.trajeto) ? a.trajeto : []).concat(Array.isArray(a.marcadores) ? a.marcadores : []);
-    if (pts.length) window.mapa.fitBounds(pts, {padding:[60, 60], maxZoom:17});
+    if (pts.length && window.mapa) window.mapa.fitBounds(pts, {padding:[60, 60], maxZoom:17});
     if (!ehDesktop()) estado('baixo');
   }
 
@@ -500,9 +506,11 @@
     navigator.geolocation.getCurrentPosition(p => {
       posicao = {lat:p.coords.latitude, lng:p.coords.longitude};
       if (marcadorEu) marcadorEu.remove();
-      marcadorEu = L.marker([posicao.lat, posicao.lng], {icon:L.divIcon({className:'', html:'<div class="eu"></div>', iconSize:[18,18], iconAnchor:[9,9]}), interactive:false}).addTo(window.mapa);
-      pintarLista();
-      window.mapa.flyTo([posicao.lat, posicao.lng], 16, {duration:.6});
+      if (window.mapa) {
+        marcadorEu = L.marker([posicao.lat, posicao.lng], {icon:L.divIcon({className:'', html:'<div class="eu"></div>', iconSize:[18,18], iconAnchor:[9,9]}), interactive:false}).addTo(window.mapa);
+        pintarLista();
+        window.mapa.flyTo([posicao.lat, posicao.lng], 16, {duration:.6});
+      }
     }, () => alert('Não foi possível pegar sua localização. Verifique a permissão do navegador.'), {enableHighAccuracy:true, timeout:10000});
   });
 
