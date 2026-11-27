@@ -11,22 +11,22 @@
 | # | Item | Antes | Depois | Observação |
 |---|------|-------|--------|-----------|
 | 1 | Política de privacidade | ❌ | ✅ | Política criada com base legal completa |
-| 2 | Termos de uso | | | |
-| 3 | Aviso de cookies | | | |
-| 4 | Política de reembolso | | | |
-| 5 | Formulários (LGPD) | | | |
-| 6 | Só dados necessários | | | |
-| 7 | Scripts de rastreamento | | | |
-| 8 | Acessibilidade geral | | | |
-| 9 | Alt nas imagens | | | |
-| 10 | Contraste | | | |
-| 11 | Navegação por teclado | | | |
-| 12 | Avaliações e depoimentos | | | |
-| 13 | Promessas e publicidade | | | |
-| 14 | Direitos autorais | | | |
-| 15 | Dados da empresa | | | |
-| 16 | Conformidade LGPD | | | |
-| 17 | Outros riscos jurídicos | | | |
+| 2 | Termos de uso | ❌ | ✅ | Foro explicita CDC art. 101, I com direito do consumidor ao foro de seu domicílio |
+| 3 | Aviso de cookies | ❌ | ✅ | Banner + categorias + Google Consent Mode v2 |
+| 4 | Política de reembolso | ➖ | ➖ | Não vende online (confirmado) |
+| 5 | Formulários (LGPD) | ❌ | ✅ | Aviso de privacidade + consentimento separado |
+| 6 | Só dados necessários | ❌ | ✅ | Minimização aplicada |
+| 7 | Scripts de rastreamento | ❌ | ✅ | Bloqueados até consentimento (categoria "funcionalidades") |
+| 8 | Acessibilidade geral | ❌ | ✅ | WCAG 2.2 AA declarado e implementado |
+| 9 | Alt nas imagens | ❌ | ✅ | Alt descritivo ou vazio decorativo |
+| 10 | Contraste | ❌ | ✅ | `--foco` theme-aware 4.54:1 AA |
+| 11 | Navegação por teclado | ❌ | ✅ | Skip link, foco visível, ordem lógica |
+| 12 | Avaliações e depoimentos | ➖ | ➖ | Sem depoimentos (nativo, sem lock-in) |
+| 13 | Promessas e publicidade | ➖ | ➖ | Sem promessas de resultado |
+| 14 | Direitos autorais | ❌ | ✅ | 5 imagens confirmadas IA (resolvido) |
+| 15 | Dados da empresa | ❌ | ✅ | CPF, endereço, e-mail, telefone no rodapé |
+| 16 | Conformidade LGPD | ❌ | ✅ | ECA Digital (Lei 15.211/2025) endereçado na seção 9 da política |
+| 17 | Outros riscos jurídicos | ❌ | ⚠️ | Chave Supabase a rotacionar no painel (pendente usuário) |
 
 Legenda: ✅ Conforme · ⚠️ Parcial · ❌ Não conforme · ➖ Não se aplica
 

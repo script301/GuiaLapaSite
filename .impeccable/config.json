@@ -1,0 +1,74 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "overused-font",
+        "value": "fraunces",
+        "createdAt": "2026-11-26T21:34:10.959Z",
+        "reason": "Escolha intencional: Fraunces variable font self-hosted para LGPD (sem Google Fonts), legibilidade em português, site guia local funcional não brand showcase"
+      },
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "createdAt": "2026-11-26T21:34:38.052Z",
+        "reason": "Escolha intencional: Inter self-hosted para LGPD (sem Google Fonts), legibilidade UI/texto corrido, site guia local funcional não brand showcase"
+      },
+      {
+        "rule": "cream-palette",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-26T21:35:41.237Z",
+        "reason": "Não é cream/beige: --fundo #F5F5F5 é cinza neutro claro padrão web. Tema escuro #0e1116. Paleta funcional para guia local, não brand showcase."
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "termos-de-uso.html"
+        ],
+        "createdAt": "2026-11-26T21:36:13.710Z",
+        "reason": "Documento legal: hierarquia propositalmente plana para clareza jurídica e leitura linear. Não é UI persuasiva."
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "politica-de-cookies.html"
+        ],
+        "createdAt": "2026-11-26T21:36:34.522Z",
+        "reason": "Documento legal: hierarquia propositalmente plana para clareza jurídica e leitura linear. Não é UI persuasiva."
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "politica-de-privacidade.html"
+        ],
+        "createdAt": "2026-11-26T21:37:33.585Z",
+        "reason": "Documento legal: hierarquia propositalmente plana para clareza jurídica e leitura linear. Não é UI persuasiva."
+      },
+      {
+        "rule": "flat-type-hierarchy",
+        "value": "*",
+        "files": [
+          "declaracao-de-acessibilidade.html"
+        ],
+        "createdAt": "2026-11-26T21:37:57.157Z",
+        "reason": "Documento legal/regulatório: hierarquia propositalmente plana para clareza e conformidade. Não é UI persuasiva."
+      },
+      {
+        "rule": "overused-font",
+        "value": "inter",
+        "files": [
+          "fonts/inter.css"
+        ],
+        "createdAt": "2026-11-26T21:38:59.246Z",
+        "reason": "Inter self-hosted para LGPD (sem Google Fonts), legibilidade UI/texto corrido. Site guia local funcional."
+      }
+    ]
+  }
+}
