@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Declaração de Acessibilidade do Guia Lapa - Conformidade com LBI e WCAG 2.2 AA">
+  <title>Declaração de Acessibilidade | Guia Lapa</title>
+  <link rel="stylesheet" href="consentimento.css">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" as="style" href="fonts/inter.css">
+  <link rel="stylesheet" href="fonts/inter.css">
+  <link rel="preload" as="style" href="fonts/fraunces.css">
+  <link rel="stylesheet" href="fonts/fraunces.css">
+</head>
+<body>
+  <a href="#main" class="skip-link">Pular para o conteúdo principal</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo" aria-label="Guia Lapa - Início">
+        <img src="marca/logo-192.png" alt="" width="48" height="48" loading="lazy">
+        <span>Guia Lapa</span>
+      </a>
+      <nav class="main-nav" aria-label="Navegação principal">
+        <a href="index.html">Início</a>
+        <a href="politica-de-privacidade.html">Política de Privacidade</a>
+        <a href="termos-de-uso.html">Termos de Uso</a>
+        <a href="politica-de-cookies.html">Política de Cookies</a>
+        <a href="declaracao-de-acessibilidade.html" aria-current="page">Acessibilidade</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main" class="container">
+    <article class="legal-page">
+      <header class="legal-header">
+        <h1>Declaração de Acessibilidade</h1>
+        <p class="legal-meta"><strong>Última atualização:</strong> 2026-11-25 · <strong>Versão:</strong> 1.0</p>
+      </header>
+
+      <section class="legal-section">
+        <h2>Compromisso</h2>
+        <p>O <strong>Guia Lapa</strong> tem o compromisso de tornar seu conteúdo acessível a todas as pessoas, em conformidade com a <strong>Lei Brasileira de Inclusão (LBI, Lei nº 13.146/2015, art. 63)</strong> e as diretrizes internacionais <strong>WCAG 2.2 nível AA</strong> (<a href="https://www.w3.org/WAI/WCAG22/quickref/" target="_blank" rel="noopener">referência</a>).</p>
+      </section>
+
+      <section class="legal-section">
+        <h2>Estado de conformidade</h2>
+        <p>Esta declaração refere-se ao site <code>guialapa.com.br</code> (e subpáginas) na versão publicada em <strong>2026-11-25</strong>.</p>
+        <p><strong>Status:</strong> Parcialmente conforme — a maioria dos critérios AA é atendida; itens conhecidos que ainda precisam de melhoria estão listados abaixo.</p>
+      </section>
+
+      <section class="legal-section">
+        <h2>Principais recursos de acessibilidade implementados</h2>
+        <ul>
+          <li><strong>Idioma da página:</strong> <code>lang="pt-BR"</code> definido no <code><html></code>.</li>
+          <li><strong>Link "Pular para o conteúdo principal":</strong> primeiro elemento focável em todas as páginas (<code>.skip-link</code>).</li>
+          <li><strong>Navegação por teclado:</strong> todos os elementos interativos (links, botões, campos, abas, mapa) são alcançáveis e operáveis via <kbd>Tab</kbd>/<kbd>Shift+Tab</kbd>; foco visível com outline de 3px nas cores do tema.</li>
+          <li><strong>Contraste:</strong> textos e elementos de UI atendem razão mínima 4,5:1 (textos) e 3:1 (bordas, ícones, foco) em ambos os temas (claro/escuro). Verificado com ferramenta automatizada (<code>scripts/contraste.py</code>).</li>
+          <li><strong>Zoom e redimensionamento:</strong> viewport sem <code>user-scalable=no</code> nem <code>maximum-scale</code>; layout responsivo até 400% de zoom.</li>
+          <li><strong>Textos alternativos:</strong> imagens de conteúdo têm <code>alt</code> descritivo; imagens decorativas usam <code>alt=""</code>.</li>
+          <li><strong>Rótulos de formulários:</strong> todos os <code><input></code>, <code><select></code>, <code><textarea></code> têm <code><label></code> explícito ou <code>aria-label</code>.</li>
+          <li><strong>Botões de ícone:</strong> botões só com emoji/ícone têm <code>aria-label</code> descritivo.</li>
+          <li><strong>Regiões ARIA:</strong> <code>header</code>, <code>main</code>, <code>nav</code>, <code>footer</code>, <code>role="region"</code> no mapa, <code>aria-live="polite"</code> na lista dinâmica.</li>
+          <li><strong>Redução de movimento:</strong> respeita <code>prefers-reduced-motion</code> (animações do banner de consentimento e transições de cards desativadas).</li>
+          <li><strong>Modo escuro/claro:</strong> alternância por botão no cabeçalho e persistência em <code>localStorage</code>; cores revalidadas em ambos os temas.</li>
+          <li><strong>Mapa interativo (Leaflet):</strong> carregado somente após consentimento na categoria "Funcionalidades"; região com <code>role="region" aria-label="Mapa da cidade"</code>; controles de zoom nativos do Leaflet acessíveis por teclado.</li>
+          <li><strong>Banner de consentimento de cookies:</strong> botões "Aceitar" e "Rejeitar" com mesmo destaque visual; painel de categorias com checkboxes descritivos; reabertura via botão no rodapé.</li>
+        </ul>
+      </section>
+
+      <section class="legal-section">
+        <h2>Limitações conhecidas e plano de melhoria</h2>
+        <table class="legal-table">
+          <thead>
+            <tr>
+              <th>Critério (WCAG)</th>
+              <th>Situação</th>
+              <th>Plano</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1.2.2 Legendas em mídia temporária (áudio/vídeo)</td>
+              <td>Não se aplica (sem mídia temporal no site atual)</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>1.2.3 Audiodescrição ou alternativa para mídia</td>
+              <td>Não se aplica</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>2.4.7 Foco visível</td>
+              <td>Atendido (outline 3px em ambos os temas)</td>
+              <td>Revalidar a cada deploy</td>
+            </tr>
+            <tr>
+              <td>3.2.2 Entrada (mudança de contexto só com ação do usuário)</td>
+              <td>Atendido</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>4.1.3 Mensagens de status (aria-live)</td>
+              <td>Parcial — lista de resultados usa <code>aria-live="polite"</code>; toasts de erro/sucesso ainda não implementados</td>
+              <td>Implementar <code>aria-live="assertive"</code> para erros críticos na próxima iteração</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="legal-section">
+        <h2>Tecnologias utilizadas</h2>
+        <ul>
+          <li>HTML5 semântico, CSS3 (variáveis customizadas, grid, flexbox)</li>
+          <li>JavaScript vanilla (ES2022)</li>
+          <li>Leaflet.js 1.9.4 (mapa) — carregado sob consentimento</li>
+          <li>Supabase (backend, RPC, autenticação)</li>
+          <li>PWA (Service Worker, Manifest, instalável)</li>
+          <li>Fontes auto-hospedadas: Inter (UI) e Fraunces (títulos) — sem requisições a Google Fonts</li>
+        </ul>
+      </section>
+
+      <section class="legal-section">
+        <h2>Testes realizados</h2>
+        <ul>
+          <li>Validação HTML (W3C Nu Html Checker) — sem erros.</li>
+          <li>Verificação automatizada de contraste (<code>scripts/contraste.py</code>) em ambos os temas.</li>
+          <li>Navegação somente por teclado em fluxos principais (busca, chips, detalhe, mapa, consentimento).</li>
+          <li>Leitura com NVDA (Windows) e VoiceOver (macOS/iOS) — ordem de leitura coerente, rótulos anunciados.</li>
+          <li>Zoom 200% e 400% no Chrome/Edge/Firefox/Safari — sem perda de conteúdo ou função.</li>
+          <li>Redução de movimento ativada no SO — animações suprimidas.</li>
+        </ul>
+      </section>
+
+      <section class="legal-section">
+        <h2>Feedback e contato de acessibilidade</h2>
+        <p>Se você encontrou uma barreira de acessibilidade ou tem sugestões, entre em contato:</p>
+        <ul>
+          <li><strong>E-mail:</strong> <a href="mailto:bmourasilvaoliveira@gmail.com">bmourasilvaoliveira@gmail.com</a> (assunto: "Acessibilidade")</li>
+          <li><strong>WhatsApp:</strong> <a href="https://wa.me/5577999659126" target="_blank" rel="noopener">(77) 99965-9126</a></li>
+          <li><strong>Endereço:</strong> Rua L, 69, Bairro São João, Bom Jesus da Lapa – BA, CEP 47600-000</li>
+        </ul>
+        <p>Comprometemo-nos a responder em até <strong>10 dias úteis</strong> e a corrigir barreiras críticas o mais rápido possível.</p>
+      </section>
+
+      <section class="legal-section">
+        <h2>Referências normativas</h2>
+        <ul>
+          <li>Lei nº 13.146/2015 (LBI) — art. 63</li>
+          <li>Decreto nº 10.791/2021 (acessibilidade em sítios eletrônicos da administração pública — referência de boas práticas)</li>
+          <li>ABNT NBR 17225 (Acessibilidade em sistemas digitais)</li>
+          <li>WCAG 2.2 (W3C) — Nível AA</li>
+        </ul>
+      </section>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <img src="marca/logo-192.png" alt="" width="48" height="48" loading="lazy">
+        <p>Guia Lapa — Guia comercial e turístico de Bom Jesus da Lapa</p>
+      </div>
+      <nav class="footer-nav" aria-label="Links legais e institucionais">
+        <h3>Legal</h3>
+        <ul>
+          <li><a href="politica-de-privacidade.html">Política de Privacidade</a></li>
+          <li><a href="termos-de-uso.html">Termos de Uso</a></li>
+          <li><a href="politica-de-cookies.html">Política de Cookies</a></li>
+          <li><a href="declaracao-de-acessibilidade.html">Declaração de Acessibilidade</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-nav" aria-label="Contato e redes">
+        <h3>Contato</h3>
+        <ul>
+          <li><a href="mailto:bmourasilvaoliveira@gmail.com">bmourasilvaoliveira@gmail.com</a></li>
+          <li><a href="https://wa.me/5577999659126" target="_blank" rel="noopener">(77) 99965-9126</a></li>
+          <li>Rua L, 69, Bairro São João<br>Bom Jesus da Lapa – BA, 47600-000</li>
+        </ul>
+      </nav>
+      <div class="footer-company">
+        <p><strong>Bruno Moura da Silva Oliveira</strong> · CPF 119.494.764-50</p>
+      </div>
+      <p class="footer-copyright">&copy; 2026 Guia Lapa. Todos os direitos reservados.</p>
+      <button type="button" data-abrir-preferencias-cookies class="footer-cookie-link">Preferências de cookies</button>
+    </div>
+  </footer>
+
+  <script src="consentimento.js"></script>
+</body>
+</html>
