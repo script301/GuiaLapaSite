@@ -1,0 +1,392 @@
+/* ========================================
+   Guia Lapa - Aplicação Principal
+   ======================================== */
+
+(function() {
+  'use strict';
+
+  // --- Constantes de Configuração ---
+  const CATEGORIAS = {
+    hotel: 'Hotel', pousada: 'Pousada', restaurante: 'Restaurante',
+    hamburgueria: 'Hamburgueria', lanchonete: 'Lanchonete', padaria: 'Padaria',
+    mercado: 'Mercado', farmacia: 'Farmácia', posto: 'Posto', banco: 'Banco',
+    religioso: 'Religioso', turismo: 'Turismo', transporte: 'Transporte',
+    servicos: 'Serviços', outros: 'Outros'
+  };
+
+  const COR = {
+    hotel: '#7B3FC4', pousada: '#7B3FC4', restaurante: '#D9480F',
+    hamburgueria: '#D9480F', lanchonete: '#E8710A', padaria: '#B8860B',
+    mercado: '#2B8A3E', farmacia: '#0CA678', posto: '#495057',
+    banco: '#1C7ED6', religioso: '#6741D9', turismo: '#0B7285',
+    transporte: '#1864AB', servicos: '#5C7CFA', outros: '#2980EB'
+  };
+
+  const ICONES = {
+    hotel: '🏨', pousada: '🏡', restaurante: '🍽️', hamburgueria: '🍔',
+    lanchonete: '🥪', padaria: '🥖', mercado: '🛒', farmacia: '💊',
+    posto: '⛽', banco: '🏦', religioso: '⛪', turismo: '🗺️',
+    transporte: '🚌', servicos: '🛠️', outros: '📍'
+  };
+
+  const TIPOS = {
+    aviso: ['📢', 'Aviso', '#1E6FD9'],
+    rua_fechada: ['⛔', 'Rua fechada', '#D93025'],
+    procissao: ['⛪', 'Procissão', '#7B3FC4'],
+    evento: ['🎉', 'Evento', '#1E9E5B'],
+    obra: ['🚧', 'Obra', '#E8710A'],
+    transito: ['🚦', 'Trânsito', '#B8860B']
+  };
+
+  // --- Helpers ---
+  const $ = id => document.getElementById(id);
+  const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({
+    '&': '&', '<': '<', '>': '>', '"': '"', "'": '''
+  }[c]));
+  const urlSegura = u => (typeof u === 'string' && /^https:\/\//i.test(u)) ? u : '';
+  const digitos = s => String(s || '').replace(/\D/g, '');
+  const comPais = d => d.startsWith('55') ? d : '55' + d;
+  const ehDesktop = () => window.matchMedia('(min-width:900px)').matches;
+  const patrocinado = h => !!h.destaque_ate && new Date(h.destaque_ate).getTime() > Date.now();
+  const guardar = (k, v) => { try { localStorage.setItem(k, v); } catch (_) {} };
+  const ler = k => { try { return localStorage.getItem(k); } catch (_) { return null; } };
+
+  // --- Estado da Aplicação ---
+  let locais = [], extras = { avisos: [], anuncios: [], config: {} };
+  let filtro = 'todas', termo = '', selecionado = null, posicao = null;
+  let pinsPorId = {}, marcadorEu = null;
+  let anuncioIdx = 0, anuncioTimer = null;
+  const anunciosVistos = new Set();
+
+  // Expor para o script do mapa (ativado pós-consentimento)
+  window.mapa = null;
+  window.camadaAvisos = null;
+  window.camadaPins = null;
+  window.desenharPins = null;
+  window.locaisRef = null;
+
+  // --- Configuração Supabase (vinda do config.js) ---
+  const CFG = window.GUIA_CONFIG || {};
+
+  // --- Tema ---
+  function aplicarTema(t) {
+    document.documentElement.setAttribute('data-tema', t);
+    $('btn-tema').textContent = t === 'escuro' ? '☀️' : '🌙';
+    const m = document.querySelector('meta[name=theme-color]');
+    if (m) m.setAttribute('content', t === 'escuro' ? '#0e1116' : '#0B2D6B');
+  }
+  aplicarTema(ler('tema') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'escuro' : 'claro'));
+  $('btn-tema').addEventListener('click', () => {
+    const novo = document.documentElement.getAttribute('data-tema') === 'escuro' ? 'claro' : 'escuro';
+    aplicarTema(novo); guardar('tema', novo);
+  });
+
+  // --- Rede (Supabase RPC) ---
+  async function rpc(nome, corpo) {
+    if (!CFG.supabaseUrl || !CFG.supabaseKey) {
+      throw new Error('Configuração Supabase ausente (supabaseUrl/supabaseKey)');
+    }
+    const r = await fetch(CFG.supabaseUrl + '/rest/v1/rpc/' + nome, {
+      method: 'POST', keepalive: true,
+      headers: {
+        apikey: CFG.supabaseKey,
+        Authorization: 'Bearer ' + CFG.supabaseKey,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(corpo || {})
+    });
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }
+
+  // --- Painel (Celular) ---
+  const painel = $('painel');
+  const ESTADOS = ['baixo', 'meio', 'alto'];
+
+  function estado(e) {
+    painel.dataset.estado = e;
+    setTimeout(() => window.mapa && window.mapa.invalidateSize(), 320);
+  }
+  function subir() { const i = ESTADOS.indexOf(painel.dataset.estado); estado(ESTADOS[Math.min(2, i + 1)]); }
+  function descer() { const i = ESTADOS.indexOf(painel.dataset.estado); estado(ESTADOS[Math.max(0, i - 1)]); }
+
+  (function arrastar() {
+    const alca = $('alca'); let y0 = null;
+    alca.addEventListener('pointerdown', e => { y0 = e.clientY; alca.setPointerCapture(e.pointerId); });
+    alca.addEventListener('pointerup', e => {
+      if (y0 == null) return;
+      const dy = e.clientY - y0; y0 = null;
+      if (Math.abs(dy) < 10) { // toque: alterna
+        const e0 = painel.dataset.estado;
+        estado(e0 === 'baixo' ? 'meio' : (e0 === 'meio' ? 'alto' : 'baixo'));
+      } else if (dy < 0) subir(); else descer();
+    });
+    alca.addEventListener('pointercancel', () => { y0 = null; });
+    alca.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); subir(); }
+      if (e.key === 'Escape') descer();
+    });
+  })();
+  $('busca').addEventListener('focus', () => {
+    if (!ehDesktop() && painel.dataset.estado === 'baixo') estado('meio');
+  });
+
+  // --- Distância ---
+  function distanciaM(a, b) {
+    const R = 6371000, rad = x => x * Math.PI / 180;
+    const dLat = rad(b.lat - a.lat), dLng = rad(b.lng - a.lng);
+    const h = Math.sin(dLat/2)**2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLng/2)**2;
+    return 2 * R * Math.asin(Math.sqrt(h));
+  }
+  const fmtDist = m => m < 1000 ? Math.round(m / 10) * 10 + ' m' : (m / 1000).toFixed(1).replace('.', ',') + ' km';
+  const dist = h => (posicao && h.latitude != null && h.longitude != null)
+    ? distanciaM(posicao, { lat: h.latitude, lng: h.longitude })
+    : null;
+
+  // --- Lista ---
+  function visiveis() {
+    const t = termo;
+    return locais
+      .filter(h => filtro === 'todas' || (h.categoria || 'outros') === filtro)
+      .filter(h => !t || [h.nome, h.descricao, h.endereco, CATEGORIAS[h.categoria]].join(' ').toLowerCase().includes(t))
+      .sort((a, b) => {
+        const p = patrocinado(b) - patrocinado(a); if (p) return p;
+        const da = dist(a), db = dist(b);
+        if (da != null && db != null && da !== db) return da - db;
+        return String(a.nome).localeCompare(String(b.nome), 'pt-BR');
+      });
+  }
+
+  function pintarLista() {
+    const itens = visiveis();
+    $('contagem').textContent = itens.length + (itens.length === 1 ? ' local' : ' locais') + ' · deslize para ver';
+    const el = $('lista');
+    if (!itens.length) {
+      el.innerHTML = '<div class="vazio">Nenhum local encontrado.</div>';
+    } else {
+      el.innerHTML = itens.map(h => {
+        const d = dist(h);
+        return '<button class="cartao" style="--cat:' + (COR[h.categoria] || COR.outros) + '" data-id="' + esc(h.id) + '" aria-label="Ver ' + esc(h.nome) + '">' +
+          '<div class="foto">' + (urlSegura(h.foto_url)
+            ? '<img src="' + esc(h.foto_url) + '" alt="" loading="lazy">'
+            : (ICONES[h.categoria] || '📍')) + '</div>' +
+          '<div style="min-width:0">' +
+            (patrocinado(h) ? '<span class="tag">★ PATROCINADO</span>' : '') +
+            '<h3>' + esc(h.nome) + '</h3>' +
+            '<p>' + esc(CATEGORIAS[h.categoria] || 'Local') + (h.endereco ? ' · ' + esc(h.endereco) : '') + '</p>' +
+            '<div class="info">' +
+              (h.horario ? '<span>🕒 ' + esc(h.horario) + '</span>' : '') +
+              (h.telefone ? '<span>📞 ' + esc(h.telefone) + '</span>' : '') +
+              (d != null ? '<span>📍 ' + fmtDist(d) + '</span>' : '') +
+              (h.n_aval ? '<span>★ ' + esc(h.nota_media) + '</span>' : '') +
+            '</div>' +
+          '</div></button>';
+      }).join('');
+    }
+    desenharPins(itens);
+  }
+
+  function pintarChips() {
+    const usadas = [...new Set(locais.map(h => h.categoria || 'outros'))];
+    $('chips').innerHTML = [['todas', 'Todas']].concat(usadas.map(c => [c, (ICONES[c] || '') + ' ' + (CATEGORIAS[c] || 'Outros')]))
+      .map(([id, n]) => '<button class="chip' + (filtro === id ? ' on' : '') + '" data-c="' + esc(id) + '" aria-pressed="' + (filtro === id) + '">' + esc(n) + '</button>').join('');
+  }
+
+  // --- Mapa ---
+  function desenharPins(itens) {
+    if (!window.camadaPins) return;
+    window.camadaPins.clearLayers(); pinsPorId = {};
+    itens.forEach(h => {
+      if (h.latitude == null || h.longitude == null) return;
+      const ic = L.divIcon({
+        className: '',
+        html: '<div class="pin' + (patrocinado(h) ? ' pat' : '') + (selecionado === h.id ? ' sel' : '') + '" style="--cat:' + (COR[h.categoria] || COR.outros) + '">' + (ICONES[h.categoria] || '📍') + '</div>',
+        iconSize: [36, 36], iconAnchor: [18, 18]
+      });
+      const m = L.marker([h.latitude, h.longitude], {
+        icon: ic, title: h.nome, keyboard: true, riseOnHover: true,
+        zIndexOffset: patrocinado(h) ? 500 : 0
+      });
+      m.on('click', () => abrirDetalhe(h.id, true));
+      m.addTo(window.camadaPins); pinsPorId[h.id] = m;
+    });
+  }
+
+  function irPara(lat, lng, zoom) {
+    if (!window.mapa) return;
+    const z = Math.max(window.mapa.getZoom(), zoom || 16);
+    let alvo = [lat, lng];
+    if (!ehDesktop()) {
+      const p = window.mapa.project(alvo, z); p.y += window.mapa.getSize().y * 0.22; alvo = window.mapa.unproject(p, z);
+    }
+    window.mapa.flyTo(alvo, z, { duration: .6 });
+  }
+
+  // --- Detalhe ---
+  function abrirDetalhe(id, doMapa) {
+    const h = locais.find(x => String(x.id) === String(id)); if (!h) return;
+    selecionado = h.id;
+    const tel = digitos(h.telefone), zap = digitos(h.whatsapp || h.telefone);
+    const temPos = h.latitude != null && h.longitude != null;
+    const rota = temPos ? 'https://www.google.com/maps/dir/?api=1&destination=' + h.latitude + ',' + h.longitude : '';
+    const link = location.origin + location.pathname + '#' + h.id;
+    const msg = encodeURIComponent((h.nome || 'Local') + ' no Guia Lapa: ' + link);
+    const d = dist(h);
+    $('detalhe').innerHTML =
+      '<div class="det">' +
+      '<button class="voltar" id="voltar">← Voltar à lista</button>' +
+      (urlSegura(h.foto_url) ? '<div class="capa-wrap"><img class="capa" src="' + esc(h.foto_url) + '" alt="Foto de ' + esc(h.nome) + '"></div>' : '') +
+      (patrocinado(h) ? '<span class="tag">★ PATROCINADO</span>' : '') +
+      '<h2>' + esc(h.nome) + '</h2>' +
+      '<div class="linha"><span class="ic">' + (ICONES[h.categoria] || '📍') + '</span><span class="s">' + esc(CATEGORIAS[h.categoria] || 'Local') + (d != null ? ' · a ' + fmtDist(d) : '') + '</span></div>' +
+      (h.horario ? '<div class="linha destaque"><span class="ic">🕒</span><span><b>Horário</b><br>' + esc(h.horario) + '</span></div>' : '') +
+      (h.telefone ? '<div class="linha destaque"><span class="ic">📞</span><span><b>Telefone</b><br>' + esc(h.telefone) + '</span></div>' : '') +
+      (h.endereco ? '<div class="linha"><span class="ic">📍</span><span>' + esc(h.endereco) + '</span></div>' : '') +
+      (h.descricao ? '<p>' + esc(h.descricao) + '</p>' : '') +
+      (h.n_aval ? '<div class="linha"><span class="ic">★</span><span>' + esc(h.nota_media) + ' (' + esc(h.n_aval) + ' avaliações no app)</span></div>' : '') +
+      '<div class="btns">' +
+        (rota ? '<a class="btn" href="' + esc(rota) + '" target="_blank" rel="noopener">Como chegar</a>' : '') +
+        (tel ? '<a class="btn sec" href="tel:+' + comPais(tel) + '">Ligar</a>' : '') +
+        (zap ? '<a class="btn sec" href="https://wa.me/' + comPais(zap) + '" target="_blank" rel="noopener">WhatsApp</a>' : '') +
+        '<a class="btn sec" href="https://wa.me/?text=' + msg + '" target="_blank" rel="noopener">Compartilhar</a>' +
+      '</div></div>';
+    $('lista').hidden = true; $('avisos').hidden = true; $('anuncio').hidden = true; $('detalhe').hidden = false;
+    $('rolagem').scrollTop = 0;
+    $('voltar').addEventListener('click', fecharDetalhe);
+    try { history.replaceState(null, '', '#' + h.id); } catch (_) {}
+    if (!ehDesktop()) estado('alto');
+    pintarLista(); // atualiza destaque do pino
+    if (temPos) irPara(h.latitude, h.longitude, 17);
+  }
+  function fecharDetalhe() {
+    selecionado = null;
+    $('detalhe').hidden = true; $('lista').hidden = false; $('avisos').hidden = false; $('anuncio').hidden = false;
+    try { history.replaceState(null, '', location.pathname); } catch (_) {}
+    pintarLista();
+  }
+
+  // --- Avisos ---
+  const noAr = a => new Date(a.inicio || 0).getTime() <= Date.now() && new Date(a.ate || 0).getTime() > Date.now();
+  function fmtQuando(a) {
+    const f = d => { const x = new Date(d); return x.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' }) + ' ' + x.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }); };
+    return 'Até ' + f(a.ate);
+  }
+  function pintarAvisos() {
+    if (!window.camadaAvisos) return;
+    window.camadaAvisos.clearLayers();
+    const lista = (extras.avisos || []).filter(noAr);
+    $('avisos').innerHTML = lista.map((a, i) => {
+      const t = TIPOS[a.tipo] || TIPOS.aviso;
+      return '<button class="aviso" data-i="' + i + '" style="--cor:' + t[2] + '"><span class="ic">' + t[0] + '</span><span><b>' + esc(a.titulo || t[1]) + '</b>' + esc(a.texto) + '<br><small>' + esc(fmtQuando(a)) + '</small></span></button>';
+    }).join('');
+    $('avisos').dataset.n = lista.length;
+    lista.forEach((a, i) => {
+      const t = TIPOS[a.tipo] || TIPOS.aviso;
+      const pontos = [];
+      if (Array.isArray(a.trajeto) && a.trajeto.length > 1) {
+        L.polyline(a.trajeto, { color: t[2], weight: 7, opacity: .9 }).addTo(window.camadaAvisos);
+        pontos.push(a.trajeto[Math.floor(a.trajeto.length / 2)]);
+      }
+      (Array.isArray(a.marcadores) ? a.marcadores : []).forEach(p => pontos.push(p));
+      pontos.forEach(p => {
+        const ic = L.divIcon({
+          className: '', html: '<div class="pin av" style="--cor:' + t[2] + '">' + t[0] + '</div>',
+          iconSize: [36, 36], iconAnchor: [18, 18]
+        });
+        L.marker(p, { icon: ic, title: a.titulo || t[1], keyboard: true }).on('click', () => focarAviso(i)).addTo(window.camadaAvisos);
+      });
+    });
+    $('avisos')._lista = lista;
+  }
+  function focarAviso(i) {
+    const a = ($('avisos')._lista || [])[i]; if (!a) return;
+    const pts = (Array.isArray(a.trajeto) ? a.trajeto : []).concat(Array.isArray(a.marcadores) ? a.marcadores : []);
+    if (pts.length && window.mapa) window.mapa.fitBounds(pts, { padding: [60, 60], maxZoom: 17 });
+    if (!ehDesktop()) estado('baixo');
+  }
+
+  // --- Anúncios ---
+  function imagemDoAnuncio(a) {
+    return urlSegura(ehDesktop() ? (a.imagem_desktop_url || a.imagem_url) : a.imagem_url);
+  }
+  function pintarAnuncio() {
+    clearInterval(anuncioTimer);
+    const lista = (extras.anuncios || []).filter(a => imagemDoAnuncio(a));
+    const box = $('anuncio');
+    if (!lista.length) {
+      const zap = digitos(CFG.whatsappAdmin || (extras.config || {}).whatsapp_anuncios);
+      box.innerHTML = zap ? '<div class="convite">Seu negócio aqui? <a href="https://wa.me/' + comPais(zap) + '?text=' + encodeURIComponent('Olá! Quero anunciar no Guia Lapa.') + '" target="_blank" rel="noopener">Fale com a gente</a></div>' : '';
+      return;
+    }
+    const mostrar = () => {
+      const a = lista[anuncioIdx % lista.length];
+      const img = '<img src="' + esc(imagemDoAnuncio(a)) + '" alt="Anúncio: ' + esc(a.titulo) + '">';
+      const link = urlSegura(a.link);
+      box.innerHTML = '<div class="anuncio"><span class="rotulo">PATROCINADO</span>' +
+        (link ? '<a href="' + esc(link) + '" target="_blank" rel="noopener sponsored" data-ad="' + esc(a.id) + '">' + img + '</a>' : '<div class="ad">' + img + '</div>') + '</div>';
+      if (!anunciosVistos.has(a.id)) {
+        anunciosVistos.add(a.id);
+        rpc('app_anuncio_evento', { p_id: a.id, p_tipo: 'visto' }).catch(() => {});
+      }
+    };
+    mostrar();
+    if (lista.length > 1) anuncioTimer = setInterval(() => { anuncioIdx++; mostrar(); }, 7000);
+  }
+  $('anuncio').addEventListener('click', e => {
+    const a = e.target.closest('a[data-ad]');
+    if (a) rpc('app_anuncio_evento', { p_id: a.dataset.ad, p_tipo: 'clique' }).catch(() => {});
+  });
+
+  // --- Eventos de Interface ---
+  $('lista').addEventListener('click', e => { const b = e.target.closest('.cartao'); if (b) abrirDetalhe(b.dataset.id, false); });
+  $('chips').addEventListener('click', e => { const b = e.target.closest('.chip'); if (!b) return; filtro = b.dataset.c; pintarChips(); pintarLista(); });
+  $('busca').addEventListener('input', e => { termo = e.target.value.trim().toLowerCase(); if ($('detalhe').hidden === false) fecharDetalhe(); pintarLista(); });
+  $('avisos').addEventListener('click', e => { const b = e.target.closest('.aviso'); if (b) focarAviso(+b.dataset.i); });
+  window.addEventListener('resize', () => { if (window.mapa) window.mapa.invalidateSize(); pintarAnuncio(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('detalhe').hidden) fecharDetalhe(); });
+
+  $('btn-perto').addEventListener('click', () => {
+    if (!navigator.geolocation) { alert('Seu navegador não permite localização.'); return; }
+    navigator.geolocation.getCurrentPosition(p => {
+      posicao = { lat: p.coords.latitude, lng: p.coords.longitude };
+      if (marcadorEu) marcadorEu.remove();
+      if (window.mapa) {
+        marcadorEu = L.marker([posicao.lat, posicao.lng], {
+          icon: L.divIcon({ className: '', html: '<div class="eu"></div>', iconSize: [18, 18], iconAnchor: [9, 9] }),
+          interactive: false
+        }).addTo(window.mapa);
+        pintarLista();
+        window.mapa.flyTo([posicao.lat, posicao.lng], 16, { duration: .6 });
+      }
+    }, () => alert('Não foi possível pegar sua localização. Verifique a permissão do navegador.'), { enableHighAccuracy: true, timeout: 10000 });
+  });
+
+  // --- Inicialização ---
+  const botoes = $('botoes-app');
+  const apk = urlSegura(CFG.apkUrl);
+  if (apk) botoes.innerHTML = '<a class="btn" href="' + esc(apk) + '" rel="noopener">Baixar para Android</a>';
+
+  async function carregar() {
+    if (!CFG.supabaseUrl || CFG.supabaseUrl.indexOf('SEU-PROJETO') >= 0) {
+      $('lista').innerHTML = '<div class="vazio">Site sem configuração. Preencha o config.js.</div>'; return;
+    }
+    try {
+      const [h, ex] = await Promise.all([rpc('app_publico_hoteis'), rpc('app_publico_extras').catch(() => ({}))]);
+      locais = Array.isArray(h.hoteis) ? h.hoteis : [];
+      window.locaisRef = locais;
+      window.desenharPins = desenharPins;
+      extras = { avisos: ex.avisos || [], anuncios: ex.anuncios || [], config: ex.config || {} };
+      pintarChips(); pintarLista(); pintarAvisos(); pintarAnuncio();
+      const id = decodeURIComponent((location.hash || '').slice(1));
+      if (id) abrirDetalhe(id, false);
+    } catch (err) {
+      $('lista').innerHTML = '<div class="vazio">Não foi possível carregar os locais agora. Tente de novo em instantes.</div>';
+    }
+  }
+  carregar();
+  // Atualiza avisos e anúncios a cada 5 minutos com a página aberta.
+  setInterval(() => rpc('app_publico_extras').then(ex => {
+    extras = { avisos: ex.avisos || [], anuncios: ex.anuncios || [], config: ex.config || {} };
+    pintarAvisos(); pintarAnuncio();
+  }).catch(() => {}), 300000);
+})();
